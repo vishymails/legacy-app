@@ -1,0 +1,22 @@
+# External service — exposes the app to traffic outside the cluster.
+# Cloud providers provision an external IP/hostname automatically.
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.service.loadBalancer.name }}
+  labels:
+    {{- include "legacy-app.labels" . | nindent 4 }}
+    service-type: external
+  {{- if .Values.service.loadBalancer.awsLbType }}
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-type: {{ .Values.service.loadBalancer.awsLbType | quote }}
+  {{- end }}
+spec:
+  type: LoadBalancer
+  selector:
+    {{- include "legacy-app.selectorLabels" . | nindent 4 }}
+  ports:
+    - name: http
+      protocol: TCP
+      port: {{ .Values.service.loadBalancer.port }}
+      targetPort: {{ .Values.service.loadBalancer.targetPort }}

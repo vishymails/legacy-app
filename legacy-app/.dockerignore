@@ -1,0 +1,22 @@
+# Build artefacts
+dist/
+node_modules/
+
+# Test suite — never included in the production image
+tests/
+coverage/
+
+# Dev / editor noise
+.git/
+.gitignore
+*.md
+*.log
+.env*
+.vscode/
+.idea/
+
+# Deployment manifests (not part of the application itself)
+deploy/
+
+# TypeScript build cache
+*.tsbuildinfo

@@ -1,0 +1,55 @@
+# Default values — override per environment with -f values-prod.yaml etc.
+
+replicaCount: 4
+
+image:
+  repository: legacy-app
+  tag: latest
+  pullPolicy: IfNotPresent
+
+# Factor III: all runtime config lives here, not baked into the image
+env:
+  NODE_ENV: production
+  PORT: "3000"
+
+service:
+  clusterIP:
+    name: legacy-app-clusterip
+    port: 80
+    targetPort: 3000
+  loadBalancer:
+    name: legacy-app-lb
+    port: 80
+    targetPort: 3000
+    # AWS annotation — set to "" to disable
+    awsLbType: "nlb"
+
+resources:
+  requests:
+    cpu: "100m"
+    memory: "128Mi"
+  limits:
+    cpu: "500m"
+    memory: "256Mi"
+
+probes:
+  liveness:
+    path: /health
+    initialDelaySeconds: 10
+    periodSeconds: 20
+    failureThreshold: 3
+  readiness:
+    path: /health
+    initialDelaySeconds: 5
+    periodSeconds: 10
+    failureThreshold: 3
+
+# Spread pods across nodes to survive single-node failure
+topologySpread:
+  enabled: true
+  maxSkew: 1
+
+securityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+  fsGroup: 1000

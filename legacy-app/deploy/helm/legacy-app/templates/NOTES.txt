@@ -1,0 +1,25 @@
+🚀 legacy-app {{ .Chart.AppVersion }} deployed as release "{{ .Release.Name }}"
+
+Replicas : {{ .Values.replicaCount }}
+Image    : {{ .Values.image.repository }}:{{ .Values.image.tag }}
+
+── Internal (ClusterIP) ──────────────────────────────────────────
+Reachable inside the cluster at:
+  http://{{ .Values.service.clusterIP.name }}.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.service.clusterIP.port }}
+
+── External (LoadBalancer) ───────────────────────────────────────
+Wait for the external IP to be assigned:
+  kubectl get svc {{ .Values.service.loadBalancer.name }} -n {{ .Release.Namespace }} --watch
+
+Then test:
+  curl http://<EXTERNAL-IP>/health
+
+── Useful commands ───────────────────────────────────────────────
+  # Tail logs from all pods
+  kubectl logs -l app.kubernetes.io/name={{ include "legacy-app.name" . }} -n {{ .Release.Namespace }} -f
+
+  # Scale replicas
+  helm upgrade {{ .Release.Name }} ./legacy-app --set replicaCount=6
+
+  # Roll back
+  helm rollback {{ .Release.Name }}

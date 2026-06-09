@@ -1,0 +1,12 @@
+apiVersion: v2
+name: legacy-app
+description: Modular Node.js/Express service extracted from a monolith
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
+keywords:
+  - nodejs
+  - express
+  - typescript
+maintainers:
+  - name: platform-team

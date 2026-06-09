@@ -1,0 +1,19 @@
+# ClusterIP — Pod-to-Pod (internal) communication only.
+# Other services inside the cluster reach the app at:
+#   http://legacy-app-clusterip.default.svc.cluster.local:80
+apiVersion: v1
+kind: Service
+metadata:
+  name: legacy-app-clusterip
+  labels:
+    app: legacy-app
+    service-type: internal
+spec:
+  type: ClusterIP
+  selector:
+    app: legacy-app
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80          # port other pods dial
+      targetPort: 3000  # port the container listens on
